@@ -5,6 +5,7 @@ import com.advances.postman.services.EarlyBirdDiscountService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 @Configuration
@@ -12,7 +13,7 @@ public class DiscountFeatureConfig {
 
 
     @Bean
-    @ConditionalOnProperty(name = "feature.earlybird.enabled", havingValue = "false")
+    @ConditionalOnProperty(name = "feature.earlybird.enabled", havingValue = "true")
     public EarlyBirdDiscountService earlyBirdDiscountService() {
 
         return new EarlyBirdDiscountService();
@@ -24,8 +25,8 @@ public class DiscountFeatureConfig {
         return new EarlyBirdDiscountService() {
             @Override
             public ResponseEntity<?> earlyBirdDiscount(RequestDTO dto) {
-                return ResponseEntity.ok("El servicio está desactivado. Para activarlo añade true en notification.sms" +
-                        ".enabled");
+                return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body("El servicio está desactivado. Para" +
+                        " activarlo añade true en application.properties feature.earlybird.enabled=true  ");
             }
         };
     }
